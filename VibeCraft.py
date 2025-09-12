@@ -7,11 +7,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# NEW: Get the variables from the environment
 CLIENT_ID = os.getenv('SPOTIPY_CLIENT_ID')
 CLIENT_SECRET = os.getenv('SPOTIPY_CLIENT_SECRET')
 REDIRECT_URI = os.getenv('SPOTIPY_REDIRECT_URI')
-
 # this is for the string of permissions we need
 scope = 'user-library-read playlist-modify-private playlist-modify-public '
 sp = spotipy.Spotify(
@@ -56,13 +54,13 @@ def get_audio_features(sp, track_ids):
         chunk = track_ids[i:i + chunk_size]
         try:
             audio_features = sp.audio_features(chunk)
-            if audio_features is not None:  # Check if the response is valid
+            if audio_features is not None:  
                 all_audio_features.extend(audio_features)
             print(f"Processed {min(i + chunk_size, len(track_ids))}/{len(track_ids)} tracks")
         except Exception as e:
             print(f"Error on chunk {i}: {e}")
-            # You can decide to break or continue here
-        time.sleep(1)  # WAIT 1 SECOND between API calls
+           
+        time.sleep(1)  
 
     return all_audio_features
 
