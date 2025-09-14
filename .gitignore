@@ -3,4 +3,4 @@
 .cache*
 __pycache__/
 *.csv
-.VibeCraft.py
+VibeCraft.py
