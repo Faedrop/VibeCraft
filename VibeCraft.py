@@ -11,7 +11,9 @@ CLIENT_ID = os.getenv('SPOTIPY_CLIENT_ID')
 CLIENT_SECRET = os.getenv('SPOTIPY_CLIENT_SECRET')
 REDIRECT_URI = os.getenv('SPOTIPY_REDIRECT_URI')
 # this is for the string of permissions we need
-scope = 'user-library-read playlist-modify-private playlist-modify-public '
+scope = 'user-library-read playlist-modify-private playlist-modify-public user-read-private'
+
+
 sp = spotipy.Spotify(
     auth_manager=SpotifyOAuth(
         client_id=CLIENT_ID,
@@ -19,7 +21,7 @@ sp = spotipy.Spotify(
         redirect_uri=REDIRECT_URI,
         scope=scope
     ),
-    requests_timeout=10 
+    requests_timeout=30 
 )
 results = sp.current_user()
 print(f"Found {results['display_name']}'s profile")
@@ -47,21 +49,28 @@ def get_liked_tracks(sp):
 
 def get_audio_features(sp, track_ids):
     chunk_size = 100
-    all_audio_features=  []
+    all_audio_features = []
+    total_chunks = (len(track_ids) + chunk_size - 1) // chunk_size
 
-
+    print(f"Processing {len(track_ids)} tracks in {total_chunks} chunks...")
+    
     for i in range(0, len(track_ids), chunk_size):
         chunk = track_ids[i:i + chunk_size]
+        chunk_num = (i // chunk_size) + 1
+        
         try:
+            print(f"Processing chunk {chunk_num}/{total_chunks}...")
             audio_features = sp.audio_features(chunk)
             if audio_features is not None:  
-                all_audio_features.extend(audio_features)
-            print(f"Processed {min(i + chunk_size, len(track_ids))}/{len(track_ids)} tracks")
+                valid_features = [f for f in audio_features if f is not None]
+                all_audio_features.extend(valid_features)
+                print(f"✓ Chunk {chunk_num} complete - got {len(valid_features)} valid tracks")
         except Exception as e:
-            print(f"Error on chunk {i}: {e}")
-           
-        time.sleep(1)  
+            print(f"✗ Error on chunk {chunk_num}: {e}")
+            continue
+        time.sleep(0.5)  
 
+    print(f"Finished! Got audio features for {len(all_audio_features)} tracks")
     return all_audio_features
 
 def filter_tracks_by_vibe(df,vibe_name):

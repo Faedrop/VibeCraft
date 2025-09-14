@@ -1,17 +1,20 @@
-# VibeCraft 🎵
+## VibeCraft 🎵
+A smart music mood analyzer and playlist generator that combines Spotify and Last.fm data to classify your liked songs by vibe and create personalized mood-based playlists.
 
-An AI-powered Spotify playlist generator that creates mood-based playlists from your Liked Songs.
+## Features
+Multi-API Analysis: Combines Spotify metadata with Last.fm social data for enhanced mood classification
 
-## Setup
+Advanced Mood Detection: Classifies tracks into 6 distinct vibes: happy, sad, energetic, chill, romantic, and aggressive
 
-1.  Clone this repo.
-2.  Install dependencies: `pip install -r requirements.txt`
-3.  Create a Spotify App at the [Developer Dashboard](https://developer.spotify.com/dashboard/).
-4.  Create a `.env` file and add your credentials:
-    ```
-    SPOTIPY_CLIENT_ID='your_client_id_here'
-    SPOTIPY_CLIENT_SECRET='your_client_secret_here'
-    SPOTIPY_REDIRECT_URI='http://127.0.0.1:8000/callback'
-    ```
-5.  Add your Spotify email to your app's "User Management" settings in the dashboard.
-6.  Run the script: `python VibeCraft.py`
+Smart Playlist Generation: Automatically creates Spotify playlists based on your preferred mood
+
+Batch Processing: Efficiently handles large music libraries with intelligent API rate limiting
+
+## How It Works
+VibeCraft analyzes your Spotify liked songs using a combination of:
+
+Spotify Data: Popularity, duration, explicit content, and artist genres
+
+Last.fm Data: Play counts, listener statistics, and community tags
+
+Proprietary Algorithm: Calculates energy, valence, danceability, and tempo scores to determine the overall vibe
